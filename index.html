@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRIGHT STUDIOS</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+font-family:Arial,sans-serif;
+background:#090B10;
+color:#fff;
+overflow-x:hidden;
+}
+#bg{
+position:fixed;inset:0;z-index:-2;
+background:radial-gradient(circle at center,#122033,#090B10 60%);
+}
+#spotlight{
+position:fixed;width:300px;height:300px;border-radius:50%;
+background:radial-gradient(circle,rgba(102,196,255,.25),transparent 70%);
+pointer-events:none;z-index:-1;transform:translate(-50%,-50%);
+}
+nav{
+backdrop-filter:blur(10px);
+background:rgba(255,255,255,.05);
+padding:16px 30px;
+position:sticky;top:0;
+}
+.hero{
+min-height:100vh;
+display:flex;flex-direction:column;justify-content:center;align-items:center;
+text-align:center;padding:20px;
+}
+h1{
+font-size:4rem;
+background:linear-gradient(90deg,#66C4FF,#fff,#B7D4E8);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+.subtitle{font-size:1.3rem;max-width:700px;margin:20px auto;color:#cfd8e3}
+.btn{
+display:inline-block;margin-top:25px;padding:16px 35px;
+background:linear-gradient(90deg,#66C4FF,#A7E0FF);
+color:#000;text-decoration:none;font-weight:bold;border-radius:14px;
+transition:.3s;
+}
+.btn:hover{transform:translateY(-4px);box-shadow:0 0 30px #66C4FF}
+.section{padding:80px 20px;max-width:1200px;margin:auto}
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+}
+.card{
+background:rgba(255,255,255,.05);
+backdrop-filter:blur(10px);
+padding:25px;border-radius:18px;
+border:1px solid rgba(255,255,255,.1);
+transition:.3s;
+}
+.card:hover{transform:translateY(-8px)}
+.stats{
+display:flex;justify-content:center;gap:40px;flex-wrap:wrap;
+}
+.stat{font-size:2rem;font-weight:bold}
+canvas{position:fixed;inset:0;z-index:-1}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<canvas id="particles"></canvas>
+<div id="spotlight"></div>
+
+<nav><strong>BRIGHT STUDIOS</strong></nav>
+
+<section class="hero">
+<h1>BRIGHT STUDIOS</h1>
+<p class="subtitle">Minecraft Resources Community • Setups • Plugins • Configs • Lobbies • Scripts</p>
+<a class="btn" href="https://discord.gg/5JKFwt2fnm" target="_blank">JOIN DISCORD</a>
+</section>
+
+<section class="section">
+<h2 style="text-align:center;margin-bottom:30px">WHAT WE PROVIDE</h2>
+<div class="cards">
+<div class="card">Paid Setups</div>
+<div class="card">Paid Plugins</div>
+<div class="card">Paid Configs</div>
+<div class="card">Paid Lobbies</div>
+<div class="card">Paid Scripts</div>
+</div>
+</section>
+
+<section class="section">
+<div class="stats">
+<div><div class="stat" id="count">0</div><p>Trusted Members</p></div>
+</div>
+</section>
+
+<script>
+const spotlight=document.getElementById("spotlight");
+document.addEventListener("mousemove",e=>{
+spotlight.style.left=e.clientX+"px";
+spotlight.style.top=e.clientY+"px";
+});
+
+let n=0;
+const target=2000;
+const c=document.getElementById("count");
+const timer=setInterval(()=>{
+n+=20;
+c.textContent=n+"+";
+if(n>=target){c.textContent="2000+";clearInterval(timer);}
+},15);
+
+const canvas=document.getElementById('particles');
+const ctx=canvas.getContext('2d');
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight}
+resize();addEventListener('resize',resize);
+
+const particles=[];
+for(let i=0;i<80;i++){
+particles.push({
+x:Math.random()*innerWidth,
+y:Math.random()*innerHeight,
+vx:(Math.random()-.5)*1.2,
+vy:(Math.random()-.5)*1.2
+});
+}
+
+let mouse={x:0,y:0};
+addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY});
+
+function animate(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+for(const p of particles){
+p.x+=p.vx;p.y+=p.vy;
+if(p.x<0||p.x>innerWidth)p.vx*=-1;
+if(p.y<0||p.y>innerHeight)p.vy*=-1;
+
+const dx=mouse.x-p.x,dy=mouse.y-p.y;
+const d=Math.sqrt(dx*dx+dy*dy);
+if(d<120){
+p.x-=dx*0.01;
+p.y-=dy*0.01;
+}
+
+ctx.beginPath();
+ctx.arc(p.x,p.y,2,0,Math.PI*2);
+ctx.fillStyle="#66C4FF";
+ctx.fill();
+}
+requestAnimationFrame(animate);
+}
+animate();
+</script>
+</body>
+</html>
